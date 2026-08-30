@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #101014;
+  --color-paper-2: #0d0d12;
+  --color-ink: #f6f5f2;
+  --color-ink-soft: #a8a8b3;
+  --color-muted: #62626f;
+  --color-line: #1e1e24;
+  --color-accent: #f5871f;
+  --color-accent-soft: #f9a43c;
+
+  --font-anton: "Anton", sans-serif;
+  --font-poppins: "Poppins", system-ui, sans-serif;
+  --font-script: "Yellowtail", cursive;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+}
+
+html { background: var(--color-paper); }
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-poppins);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--color-accent); color: white; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0d0d12; }
+::-webkit-scrollbar-thumb { background: #2a2a32; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-accent); }
+
+/* Smooth thin hairline */
+.hairline { height: 1px; background: var(--color-line); }
+
+/* Production: content-visibility for below-fold */
+#work, #contact { content-visibility: auto; contain-intrinsic-size: 1000px; }
