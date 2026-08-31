@@ -2,12 +2,10 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { projects } from "./data";
 import { ProjectCard } from "./ProjectCard";
-import { ProjectExpansionTransition } from "./ProjectExpansionTransition";
 import { LightLeaks } from "../LightLeaks";
 
 export function ProjectDeck() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [expanded, setExpanded] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
   const pinRef = useRef(null);
   const deckRef = useRef(null);
@@ -18,24 +16,18 @@ export function ProjectDeck() {
 
   useEffect(() => {
     const onKey = (e) => {
-      if (expanded) { if (e.key === "Escape") setExpanded(null); return; }
       if (e.key === "ArrowRight" || e.key === "ArrowDown") next();
       if (e.key === "ArrowLeft" || e.key === "ArrowUp") prev();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [expanded, next, prev]);
-
-  useEffect(() => {
-    document.body.style.overflow = expanded ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [expanded]);
+  }, [next, prev]);
 
   // Pinned scroll - unskippable, rAF throttled for smoothness
   useEffect(() => {
     let ticking = false;
     const update = () => {
-      if (!pinRef.current || expanded) { ticking = false; return; }
+      if (!pinRef.current) { ticking = false; return; }
       const rect = pinRef.current.getBoundingClientRect();
       const vh = window.innerHeight;
       const total = rect.height - vh;
@@ -58,7 +50,7 @@ export function ProjectDeck() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [expanded]);
+  }, []);
 
   // Wheel to drive deck when hovered or when section is at top
   useEffect(() => {
@@ -66,7 +58,6 @@ export function ProjectDeck() {
     if (!el) return;
     let lock = false;
     const onWheel = (e) => {
-      if (expanded) return;
       const rect = el.getBoundingClientRect();
       const atTop = Math.abs(rect.top) < 8;
       if (!atTop && !isHovered) return;
@@ -82,7 +73,7 @@ export function ProjectDeck() {
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-  }, [expanded, isHovered, activeIndex, next, prev]);
+  }, [isHovered, activeIndex, next, prev]);
 
   // Touch swipe
   useEffect(() => {
@@ -104,8 +95,11 @@ export function ProjectDeck() {
   }, [next, prev]);
 
   const handleSelect = (idx, project) => {
-    if (idx === activeIndex) setExpanded(project);
-    else setActiveIndex(idx);
+    if (idx === activeIndex) {
+      if (project.href && project.href !== "#") window.open(project.href, "_blank", "noopener,noreferrer");
+      return;
+    }
+    setActiveIndex(idx);
   };
 
   const progress = ((activeIndex + 1) / projects.length) * 100;
@@ -207,8 +201,6 @@ export function ProjectDeck() {
           </div>
         </div>
       </motion.div>
-
-      <ProjectExpansionTransition project={expanded} onClose={() => setExpanded(null)} />
     </section>
   );
 }

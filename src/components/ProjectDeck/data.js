@@ -28,7 +28,7 @@ export const projects = [
     image: "/demo-contrictors.webp",
     preview: "/demo-contrictors.webp",
     tags: ["Next.js", "GSAP", "Sanity"],
-    href: "#",
+    href: "https://webiste1-weld.vercel.app/",
     stats: { pages: "18 Pages", score: "98 Lighthouse", aw: "Editorial Pick" }
   },
   {
